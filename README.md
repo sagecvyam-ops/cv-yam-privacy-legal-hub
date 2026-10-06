@@ -39,6 +39,11 @@ Clone the repository and install all required packages:
 npm install
 ```
 
+> **Tip:** If you encounter any peer dependency resolution warnings with older npm versions or existing lockfiles, you can run:
+> ```bash
+> npm install --legacy-peer-deps
+> ```
+
 ### 2. Run the Development Server
 
 Start the local Vite development server:
