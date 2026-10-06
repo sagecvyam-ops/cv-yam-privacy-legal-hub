@@ -88,6 +88,62 @@ npm run lint
 
 ---
 
+## Deploying to GitHub Pages
+
+This project is pre-configured for **GitHub Pages** with:
+* Relative asset bundling (`base: './'` in `vite.config.ts`).
+* Single Page App deep-link routing fallback (`public/404.html` and query/hash handling in `src/App.tsx`).
+* Pre-configured `gh-pages` deploy script (`npm run deploy`).
+* Pre-configured GitHub Actions CI/CD workflow (`.github/workflows/deploy.yml`).
+
+---
+
+### Method 1: One-Command CLI Deployment (`npm run deploy`)
+
+This is the fastest method to deploy directly from your local terminal:
+
+1. **Make sure your GitHub remote is set:**
+   ```bash
+   git remote add origin https://github.com/<your-username>/<your-repo-name>.git
+   ```
+
+2. **Run the deploy command:**
+   ```bash
+   npm run deploy
+   ```
+   *This automatically builds the production app and pushes the `dist` folder to the `gh-pages` branch on your GitHub repository.*
+
+3. **Set GitHub Pages to the `gh-pages` branch:**
+   * Open your repository on GitHub.
+   * Go to **Settings** → **Pages** (left menu).
+   * Under **Build and deployment** → **Source**, select **Deploy from a branch**.
+   * Under **Branch**, select `gh-pages` and folder `/ (root)`, then click **Save**.
+   * Your site will be live at:
+     ```text
+     https://<your-username>.github.io/<your-repo-name>/
+     ```
+
+---
+
+### Method 2: Automatic GitHub Actions Deployment (CI/CD)
+
+If you prefer GitHub to automatically build and deploy whenever you push code:
+
+1. **Push your code to GitHub `main`:**
+   ```bash
+   git add .
+   git commit -m "Update legal portal"
+   git push origin main
+   ```
+
+2. **Set GitHub Pages to GitHub Actions:**
+   * Open your repository on GitHub.
+   * Go to **Settings** → **Pages**.
+   * Under **Build and deployment** → **Source**, select **GitHub Actions**.
+   * The included `.github/workflows/deploy.yml` workflow will run automatically.
+
+---
+
 ## Available Routes
 
 | Route | Description |
@@ -107,7 +163,8 @@ npm run lint
 * **Legal Metadata:** Central dates and contact details are managed in `src/data/legalMeta.ts`:
   * **Effective Date:** 6 October 2026
   * **Last Updated:** 6 October 2026
-  * **Official Email:** `cvbuilderapp.sa@gmail.com`
+  * **Official Email:** `clifortramaramela@gmail.com`
+  * **Google Play App:** `https://play.google.com/store/apps/details?id=com.kosha.cv.yam`
   * **Regulator:** The Information Regulator (South Africa)
 
 ---

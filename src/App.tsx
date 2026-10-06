@@ -10,6 +10,13 @@ export default function App() {
   const [currentPath, setCurrentPath] = useState<string>(() => {
     // Support both pathname and hash routing
     if (typeof window !== 'undefined') {
+      // Check query parameter redirect from GitHub Pages 404
+      const search = window.location.search.toLowerCase();
+      if (search.includes('/privacy') || search.includes('privacy')) return '/privacy';
+      if (search.includes('/account-terms') || search.includes('account-terms')) return '/account-terms';
+      if (search.includes('/terms') || search.includes('terms')) return '/terms';
+      if (search.includes('/contact') || search.includes('contact')) return '/contact';
+
       const hash = window.location.hash.toLowerCase();
       if (hash.startsWith('#/privacy') || hash === '#privacy') return '/privacy';
       if (hash.startsWith('#/terms') || hash === '#terms') return '/terms';

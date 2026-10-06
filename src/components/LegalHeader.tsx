@@ -77,7 +77,7 @@ export const LegalHeader: React.FC<LegalHeaderProps> = ({ currentPath, onNavigat
             })}
             <div className="h-4 w-px bg-slate-200 mx-2" aria-hidden="true" />
             <a
-              href="https://play.google.com/store"
+              href={LEGAL_META.playStoreUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-600 hover:text-[#1E88E5] px-2.5 py-1.5 rounded-md hover:bg-slate-50 transition-colors"
@@ -123,6 +123,15 @@ export const LegalHeader: React.FC<LegalHeaderProps> = ({ currentPath, onNavigat
                 </button>
               );
             })}
+            <a
+              href={LEGAL_META.playStoreUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full flex items-center justify-between px-3.5 py-3 rounded-lg text-left text-base font-semibold text-[#1E88E5] bg-[#E3F2FD]/50 hover:bg-[#E3F2FD] transition-colors"
+            >
+              <span>Get Android App (Google Play)</span>
+              <ExternalLink className="w-4 h-4 text-[#1E88E5]" />
+            </a>
           </div>
           <div className="mt-4 pt-4 border-t border-slate-100 flex items-center justify-between text-xs text-slate-600">
             <span>Official Legal Documentation</span>

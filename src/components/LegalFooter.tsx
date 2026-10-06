@@ -7,6 +7,8 @@ interface LegalFooterProps {
 }
 
 export const LegalFooter: React.FC<LegalFooterProps> = ({ onNavigate }) => {
+  const [copiedEmail, setCopiedEmail] = React.useState(false);
+
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -14,6 +16,18 @@ export const LegalFooter: React.FC<LegalFooterProps> = ({ onNavigate }) => {
   const handleNav = (path: string) => {
     onNavigate(path);
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleEmailClick = async (e: React.MouseEvent) => {
+    try {
+      if (navigator.clipboard) {
+        await navigator.clipboard.writeText(LEGAL_META.contactEmail);
+        setCopiedEmail(true);
+        setTimeout(() => setCopiedEmail(false), 2500);
+      }
+    } catch {
+      // Ignore
+    }
   };
 
   return (
@@ -40,10 +54,17 @@ export const LegalFooter: React.FC<LegalFooterProps> = ({ onNavigate }) => {
               <Mail className="w-4 h-4 text-[#64B5F6]" />
               <a
                 href={`mailto:${LEGAL_META.contactEmail}`}
-                className="text-slate-300 hover:text-white underline underline-offset-4 transition-colors"
+                onClick={handleEmailClick}
+                className="text-slate-300 hover:text-white underline underline-offset-4 transition-colors cursor-pointer"
+                title="Click to copy address or open in email"
               >
                 {LEGAL_META.contactEmail}
               </a>
+              {copiedEmail && (
+                <span className="text-[11px] text-emerald-400 font-semibold bg-emerald-950/80 border border-emerald-800/80 px-1.5 py-0.5 rounded">
+                  Copied!
+                </span>
+              )}
             </div>
           </div>
 

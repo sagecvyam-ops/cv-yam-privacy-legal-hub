@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { ContactCard } from '../components/ContactCard';
+import { EmailModal } from '../components/EmailModal';
 import { UserCheck, Shield, LifeBuoy, Mail, Send, Copy, Check, ExternalLink, Building2 } from 'lucide-react';
 import { LEGAL_META } from '../data/legalMeta';
 
@@ -9,6 +10,13 @@ export const ContactPage: React.FC = () => {
   const [userName, setUserName] = useState('');
   const [userMessage, setUserMessage] = useState('');
   const [copiedDraft, setCopiedDraft] = useState(false);
+  const [copiedAddress, setCopiedAddress] = useState(false);
+
+  // Email modal state
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalCategory, setModalCategory] = useState('Support Inquiry');
+  const [modalSubject, setModalSubject] = useState('');
+  const [modalBody, setModalBody] = useState('');
 
   const requestOptions = [
     { id: 'account_support', label: 'Account Support (Login / Password Reset)', subject: 'Account Support Request' },
@@ -27,6 +35,40 @@ export const ContactPage: React.FC = () => {
     emailSubject
   )}&body=${encodeURIComponent(emailBody)}`;
 
+  const gmailWebUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(
+    LEGAL_META.contactEmail
+  )}&su=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`;
+
+  const outlookWebUrl = `https://outlook.live.com/mail/0/deeplink/compose?to=${encodeURIComponent(
+    LEGAL_META.contactEmail
+  )}&subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`;
+
+  const handleCardContact = (categoryTitle: string, subject: string) => {
+    setModalCategory(categoryTitle);
+    setModalSubject(subject);
+    setModalBody(
+      `Dear ${LEGAL_META.appName} Team,\n\nI need assistance regarding ${categoryTitle}.\n\nMy registered email: \nDetails: `
+    );
+    setModalOpen(true);
+  };
+
+  const handleHeroEmailClick = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    try {
+      if (navigator.clipboard) {
+        await navigator.clipboard.writeText(LEGAL_META.contactEmail);
+        setCopiedAddress(true);
+        setTimeout(() => setCopiedAddress(false), 2500);
+      }
+    } catch {
+      // Fallback
+    }
+    setModalCategory('General Contact');
+    setModalSubject('[CV YAM] General Inquiry');
+    setModalBody('Dear CV YAM Team,\n\n');
+    setModalOpen(true);
+  };
+
   const copyTemplate = async () => {
     try {
       if (navigator.clipboard) {
@@ -41,6 +83,15 @@ export const ContactPage: React.FC = () => {
 
   return (
     <div className="bg-[#FAFBFD] pb-20">
+      {/* Email Dispatch Modal */}
+      <EmailModal
+        isOpen={modalOpen}
+        onClose={() => setModalOpen(false)}
+        categoryTitle={modalCategory}
+        subject={modalSubject}
+        body={modalBody}
+      />
+
       {/* Page Header */}
       <section className="bg-gradient-to-b from-[#E3F2FD]/50 via-white to-white pt-10 sm:pt-16 pb-10 sm:pb-14 border-b border-slate-200/60">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
@@ -62,13 +113,19 @@ export const ContactPage: React.FC = () => {
             <span className="text-xs font-semibold uppercase tracking-wider text-slate-500">
               Direct Contact:
             </span>
-            <a
-              href={`mailto:${LEGAL_META.contactEmail}`}
+            <button
+              onClick={handleHeroEmailClick}
               className="text-base sm:text-lg font-bold text-[#1E88E5] hover:text-[#0D47A1] hover:underline underline-offset-4 flex items-center gap-2 cursor-pointer transition-colors"
+              title="Click to copy or open in webmail"
             >
               <Mail className="w-5 h-5 text-[#1E88E5]" />
               <span>{LEGAL_META.contactEmail}</span>
-            </a>
+            </button>
+            {copiedAddress && (
+              <span className="text-xs text-emerald-600 font-semibold bg-emerald-50 px-2 py-0.5 rounded">
+                Copied to clipboard!
+              </span>
+            )}
           </div>
         </div>
       </section>
@@ -83,6 +140,7 @@ export const ContactPage: React.FC = () => {
             icon={UserCheck}
             badge="Authentication"
             emailSubject="Account Support"
+            onContact={handleCardContact}
             items={[
               'Login & Authentication',
               'Registration Assistance',
@@ -99,6 +157,7 @@ export const ContactPage: React.FC = () => {
             icon={Shield}
             badge="POPIA Compliance"
             emailSubject="Privacy Request"
+            onContact={handleCardContact}
             items={[
               'Access to Personal Information',
               'Correction of Personal Information',
@@ -115,6 +174,7 @@ export const ContactPage: React.FC = () => {
             icon={LifeBuoy}
             badge="Product Desk"
             emailSubject="General Support"
+            onContact={handleCardContact}
             items={[
               'AI CV Generation Questions',
               'Saved Cloud CV Synchronization',
@@ -134,7 +194,7 @@ export const ContactPage: React.FC = () => {
               Quick Request Assistant
             </h2>
             <p className="text-xs sm:text-sm text-slate-600 mt-1">
-              Select your topic to automatically prefill an email draft to <span className="font-semibold text-slate-800">{LEGAL_META.contactEmail}</span>.
+              Select your topic to automatically prefill an email to <span className="font-semibold text-slate-800">{LEGAL_META.contactEmail}</span>.
             </p>
           </div>
 
@@ -201,32 +261,64 @@ export const ContactPage: React.FC = () => {
               />
             </div>
 
-            <div className="pt-2 flex flex-col sm:flex-row items-center gap-3">
-              <a
-                href={mailtoUrl}
-                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-[#1E88E5] text-white font-semibold text-sm hover:bg-[#1976D2] shadow-xs transition-colors cursor-pointer"
-              >
-                <Send className="w-4 h-4" />
-                <span>Open in Email App</span>
-              </a>
+            {/* Direct Send Actions */}
+            <div className="pt-2">
+              <span className="text-xs font-semibold text-slate-600 block mb-2">
+                Send options:
+              </span>
+              <div className="flex flex-wrap items-center gap-2.5">
+                {/* Gmail Web */}
+                <a
+                  href={gmailWebUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-red-600 hover:bg-red-700 text-white font-semibold text-xs shadow-xs transition-colors cursor-pointer"
+                >
+                  <Mail className="w-3.5 h-3.5" />
+                  <span>Send via Gmail</span>
+                  <ExternalLink className="w-3 h-3 opacity-80" />
+                </a>
 
-              <button
-                type="button"
-                onClick={copyTemplate}
-                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 font-semibold text-sm transition-colors cursor-pointer"
-              >
-                {copiedDraft ? (
-                  <>
-                    <Check className="w-4 h-4 text-emerald-600" />
-                    <span>Copied Email Text</span>
-                  </>
-                ) : (
-                  <>
-                    <Copy className="w-4 h-4 text-slate-500" />
-                    <span>Copy Draft Text</span>
-                  </>
-                )}
-              </button>
+                {/* Outlook Web */}
+                <a
+                  href={outlookWebUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-[#0078D4] hover:bg-[#006cbd] text-white font-semibold text-xs shadow-xs transition-colors cursor-pointer"
+                >
+                  <Mail className="w-3.5 h-3.5" />
+                  <span>Send via Outlook</span>
+                  <ExternalLink className="w-3 h-3 opacity-80" />
+                </a>
+
+                {/* System Email App */}
+                <a
+                  href={mailtoUrl}
+                  className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-[#1E88E5] text-white font-semibold text-xs hover:bg-[#1976D2] shadow-xs transition-colors cursor-pointer"
+                >
+                  <Send className="w-3.5 h-3.5" />
+                  <span>System Mail App</span>
+                </a>
+
+                {/* Copy Draft Text */}
+                <button
+                  type="button"
+                  onClick={copyTemplate}
+                  className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 font-semibold text-xs transition-colors cursor-pointer"
+                >
+                  {copiedDraft ? (
+                    <>
+                      <Check className="w-3.5 h-3.5 text-emerald-600" />
+                      <span>Copied Draft</span>
+                    </>
+                  ) : (
+                    <>
+                      <Copy className="w-3.5 h-3.5 text-slate-500" />
+                      <span>Copy Draft Text</span>
+                    </>
+                  )}
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -273,3 +365,4 @@ export const ContactPage: React.FC = () => {
     </div>
   );
 };
+

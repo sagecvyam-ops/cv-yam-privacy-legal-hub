@@ -4,6 +4,7 @@ export interface LegalMetaConfig {
   effectiveDate: string;
   lastUpdated: string;
   contactEmail: string;
+  playStoreUrl: string;
   jurisdiction: string;
   governingLaw: string;
   privacyAct: string;
@@ -28,7 +29,8 @@ export const LEGAL_META: LegalMetaConfig = {
   tagline: 'Build a better CV. Build your future.',
   effectiveDate: '6 October 2026',
   lastUpdated: '6 October 2026',
-  contactEmail: 'cvbuilderapp.sa@gmail.com',
+  contactEmail: 'clifortramaramela@gmail.com',
+  playStoreUrl: 'https://play.google.com/store/apps/details?id=com.kosha.cv.yam',
   jurisdiction: 'Republic of South Africa',
   governingLaw: 'Laws of the Republic of South Africa',
   privacyAct: 'Protection of Personal Information Act 4 of 2013 (POPIA)',

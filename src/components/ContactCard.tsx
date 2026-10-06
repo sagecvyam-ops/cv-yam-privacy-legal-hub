@@ -10,6 +10,7 @@ interface ContactCardProps {
   items: string[];
   emailSubject: string;
   accentColor?: string;
+  onContact?: (title: string, subject: string) => void;
 }
 
 export const ContactCard: React.FC<ContactCardProps> = ({
@@ -19,10 +20,18 @@ export const ContactCard: React.FC<ContactCardProps> = ({
   badge,
   items,
   emailSubject,
+  onContact,
 }) => {
   const mailtoLink = `mailto:${LEGAL_META.contactEmail}?subject=${encodeURIComponent(
     `[CV YAM] ${emailSubject}`
   )}`;
+
+  const handleClick = (e: React.MouseEvent) => {
+    if (onContact) {
+      e.preventDefault();
+      onContact(title, `[CV YAM] ${emailSubject}`);
+    }
+  };
 
   return (
     <div className="bg-white rounded-2xl border border-slate-200 p-6 sm:p-7 shadow-xs hover:shadow-md transition-all flex flex-col justify-between group">
@@ -66,6 +75,7 @@ export const ContactCard: React.FC<ContactCardProps> = ({
       <div className="pt-4 border-t border-slate-100">
         <a
           href={mailtoLink}
+          onClick={handleClick}
           className="inline-flex w-full items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-slate-50 hover:bg-[#E3F2FD] text-[#1E88E5] font-semibold text-sm border border-slate-200 hover:border-[#64B5F6] transition-all cursor-pointer group/link"
         >
           <Mail className="w-4 h-4" />
