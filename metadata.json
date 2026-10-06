@@ -1,0 +1,6 @@
+{
+  "name": "CV YAM - Legal & Privacy Portal",
+  "description": "Official Privacy Policy, Terms & Conditions, Account Terms, and POPIA privacy request portal for CV YAM South Africa.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
