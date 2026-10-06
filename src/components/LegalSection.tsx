@@ -56,6 +56,7 @@ export const LegalSection: React.FC<LegalSectionProps> = ({ section, searchQuery
             ) : (
               <Info className="w-5 h-5 text-[#1E88E5] shrink-0 mt-0.5" />
             )}
+
             <div>
               <h3 className="font-bold mb-1 text-slate-900">{section.callout.title}</h3>
               <p className="text-slate-700">{highlightText(section.callout.content)}</p>
