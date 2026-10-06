@@ -133,7 +133,7 @@ npm run lint
     │   ├── LegalLayout.tsx        # Common shell with branding banner
     │   ├── LegalHeader.tsx        # Responsive desktop & mobile header
     │   ├── LegalFooter.tsx        # Official brand footer with copyright
-    │   ├── LegalDocumentHeader.tsx# Header with search, print & share controls
+    │   ├── LegalDocumentHeader.tsx# Header with document title & in-page search
     │   ├── LegalTableOfContents.tsx# Sticky desktop table of contents
     │   ├── MobileLegalNavigation.tsx # Dropdown navigation for mobile
     │   ├── LegalSection.tsx       # Section renderer with keyword highlighting

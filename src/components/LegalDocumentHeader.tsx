@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Printer, Share2, Check, Search, X } from 'lucide-react';
+import React from 'react';
+import { Search, X } from 'lucide-react';
 import { LEGAL_META } from '../data/legalMeta';
 
 interface LegalDocumentHeaderProps {
@@ -16,24 +16,6 @@ export const LegalDocumentHeader: React.FC<LegalDocumentHeaderProps> = ({
   searchQuery,
   onSearchChange,
 }) => {
-  const [copied, setCopied] = useState(false);
-
-  const handlePrint = () => {
-    window.print();
-  };
-
-  const handleShare = async () => {
-    try {
-      if (navigator.clipboard) {
-        await navigator.clipboard.writeText(window.location.href);
-        setCopied(true);
-        setTimeout(() => setCopied(false), 2500);
-      }
-    } catch {
-      // Fallback
-    }
-  };
-
   return (
     <div className="border-b border-slate-200 pb-8 pt-6 sm:pt-10 mb-8 sm:mb-12">
       {/* Breadcrumb / Kicker */}
@@ -69,9 +51,8 @@ export const LegalDocumentHeader: React.FC<LegalDocumentHeaderProps> = ({
         </div>
       </div>
 
-      {/* Document Action Controls and In-Document Search */}
-      <div className="mt-6 pt-6 border-t border-slate-100 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 no-print">
-        {/* Search Bar */}
+      {/* In-Document Search Bar */}
+      <div className="mt-6 pt-6 border-t border-slate-100 flex items-center justify-between no-print">
         <div className="relative flex-1 max-w-md">
           <label htmlFor="legal-search" className="sr-only">
             Search in document
@@ -97,37 +78,8 @@ export const LegalDocumentHeader: React.FC<LegalDocumentHeaderProps> = ({
             </button>
           )}
         </div>
-
-        {/* Action Buttons */}
-        <div className="flex items-center gap-2 self-end sm:self-auto">
-          <button
-            onClick={handleShare}
-            className="inline-flex items-center gap-2 px-3.5 py-2 text-xs font-semibold text-slate-700 bg-white border border-slate-300 rounded-lg hover:bg-slate-50 hover:text-slate-900 focus-visible:outline-2 focus-visible:outline-[#1E88E5] transition-colors cursor-pointer"
-            title="Copy link to document"
-          >
-            {copied ? (
-              <>
-                <Check className="w-4 h-4 text-emerald-600" />
-                <span className="text-emerald-700">Link Copied!</span>
-              </>
-            ) : (
-              <>
-                <Share2 className="w-4 h-4 text-slate-500" />
-                <span>Copy Link</span>
-              </>
-            )}
-          </button>
-
-          <button
-            onClick={handlePrint}
-            className="inline-flex items-center gap-2 px-3.5 py-2 text-xs font-semibold text-slate-700 bg-white border border-slate-300 rounded-lg hover:bg-slate-50 hover:text-slate-900 focus-visible:outline-2 focus-visible:outline-[#1E88E5] transition-colors cursor-pointer"
-            title="Print or Save as PDF"
-          >
-            <Printer className="w-4 h-4 text-slate-500" />
-            <span>Print / PDF</span>
-          </button>
-        </div>
       </div>
     </div>
   );
 };
+

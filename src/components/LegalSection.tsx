@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { SectionContent } from '../data/privacyPolicyData';
-import { Link2, AlertCircle, Info, CheckCircle2, Check } from 'lucide-react';
+import { AlertCircle, Info } from 'lucide-react';
 
 interface LegalSectionProps {
   section: SectionContent;
@@ -8,22 +8,6 @@ interface LegalSectionProps {
 }
 
 export const LegalSection: React.FC<LegalSectionProps> = ({ section, searchQuery = '' }) => {
-  const [copied, setCopied] = useState(false);
-
-  const handleCopySectionLink = async () => {
-    try {
-      const url = new URL(window.location.href);
-      url.hash = section.id;
-      if (navigator.clipboard) {
-        await navigator.clipboard.writeText(url.toString());
-        setCopied(true);
-        setTimeout(() => setCopied(false), 2000);
-      }
-    } catch {
-      // Ignore
-    }
-  };
-
   const highlightText = (text: string) => {
     if (!searchQuery.trim()) return text;
     const parts = text.split(new RegExp(`(${searchQuery.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi'));
@@ -44,22 +28,13 @@ export const LegalSection: React.FC<LegalSectionProps> = ({ section, searchQuery
       className="scroll-mt-28 py-6 sm:py-8 border-b border-slate-100 last:border-b-0"
     >
       {/* Section Header */}
-      <div className="flex items-center justify-between group">
+      <div>
         <h2 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight flex items-baseline gap-2.5">
           <span className="text-[#1E88E5] font-mono font-semibold text-lg sm:text-xl">
             {section.number}.
           </span>
           <span>{highlightText(section.title)}</span>
         </h2>
-
-        <button
-          onClick={handleCopySectionLink}
-          className="opacity-0 group-hover:opacity-100 focus-visible:opacity-100 p-1.5 text-slate-400 hover:text-[#1E88E5] rounded-md hover:bg-slate-100 transition-all cursor-pointer no-print"
-          title="Copy link to this section"
-          aria-label={`Copy link to section ${section.number}: ${section.title}`}
-        >
-          {copied ? <Check className="w-4 h-4 text-emerald-600" /> : <Link2 className="w-4 h-4" />}
-        </button>
       </div>
 
       {/* Callout if present */}
